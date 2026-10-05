@@ -46,7 +46,7 @@ function CityAutocomplete({ value, onChange }) {
 
   return (
     <select
-      className="autocomplete-input"
+      className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-brand-primary focus:outline-none focus:border-brand-sec focus:ring-1 focus:ring-brand-sec transition-shadow"
       value={selectedCity}
       onChange={handleChange}
     >

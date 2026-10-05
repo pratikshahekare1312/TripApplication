@@ -302,3 +302,6 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2026-08-14  0:03:42
+
+show tables;
+SELECT COUNT(*) FROM places;
