@@ -23,6 +23,14 @@ const {
 } = require('../services/travelCostService');
 
 
+// ---------------------------------------------------------
+// Scoring thresholds
+// ---------------------------------------------------------
+
+const MATCH_THRESHOLD      = 60.0;
+const OPTIONAL_LOWER_BOUND = 40.0;
+
+
 function parseJsonField(value) {
   if (!value) return [];
 
@@ -281,16 +289,52 @@ async function generateItinerary(req, res) {
 
 
     // -----------------------------------------------------
-    // Knapsack selects places
+    // Split matched places into main (>=60%) and optional
+    // (40-59.9%) buckets BEFORE knapsack selection.
+    // -----------------------------------------------------
+
+    const mainCandidates = matchedPlaces.filter(
+      p => p.matchScore >= MATCH_THRESHOLD
+    );
+
+    const optionalLowMatchPlaces = matchedPlaces
+      .filter(
+        p =>
+          p.matchScore >= OPTIONAL_LOWER_BOUND &&
+          p.matchScore <  MATCH_THRESHOLD
+      )
+      .map(p => ({
+        name:              p.name,
+        city:              p.city,
+        type:              p.type,
+        vibe:              p.vibe,
+        entrance_fee_inr:  p.entrance_fee_inr,
+        time_to_visit_hrs: p.time_to_visit_hrs,
+        activities:        p.activities || [],
+        match_score:       p.matchScore,
+        match_breakdown:   p.match_breakdown
+      }));
+
+
+    // -----------------------------------------------------
+    // Knapsack selects places from main candidates only.
+    //
+    // Falls back to all matched places when no place
+    // clears the threshold (e.g., very restrictive filters).
     //
     // IMPORTANT:
     // Score is used ONLY here for selection.
     // It does not decide route order.
     // -----------------------------------------------------
 
+    const knapsackInput =
+      mainCandidates.length > 0
+        ? mainCandidates
+        : matchedPlaces;
+
     const selectedPlaces =
       knapsack(
-        matchedPlaces,
+        knapsackInput,
         days,
         budget_level
       );
@@ -466,7 +510,10 @@ async function generateItinerary(req, res) {
         selectedPlaces.length,
 
       note:
-        dataNote
+        dataNote,
+
+      optional_low_match_places:
+        optionalLowMatchPlaces
     });
 
 

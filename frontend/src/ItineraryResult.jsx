@@ -267,6 +267,38 @@ function ItineraryResult({ data, onStartOver, onSaveTrip }) {
                         </div>
                       )}
 
+                      {place.match_breakdown && (
+                        (place.match_breakdown.matched_reasons?.length > 0 ||
+                         place.match_breakdown.mismatched_reasons?.length > 0) && (
+                          <div className="mt-3 pt-3 border-t border-brand-border/50 space-y-1.5">
+                            {place.match_breakdown.matched_reasons?.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5">
+                                {place.match_breakdown.matched_reasons.map((reason, i) => (
+                                  <span
+                                    key={i}
+                                    className="text-xs font-medium text-green-700 bg-green-50 px-2 py-0.5 rounded-md border border-green-200"
+                                  >
+                                    ✓ {reason}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            {place.match_breakdown.mismatched_reasons?.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5">
+                                {place.match_breakdown.mismatched_reasons.map((reason, i) => (
+                                  <span
+                                    key={i}
+                                    className="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200"
+                                  >
+                                    ⚠ {reason}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      )}
+
                     </div>
                   </div>
                 ))}
@@ -275,6 +307,96 @@ function ItineraryResult({ data, onStartOver, onSaveTrip }) {
           </div>
           
         </div>
+
+        {/* Optional Low-Match Attractions */}
+        {/* Resolve across all possible backend key names for forward compatibility */}
+        {(() => {
+          const optionalPlaces =
+            data.optional_low_match_places ??
+            data.optional_attractions ??
+            data.optional_places ??
+            [];
+          if (!optionalPlaces.length) return null;
+          return (
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-sm">
+            <div className="mb-6">
+              <h3 className="text-lg font-bold text-brand-dark mb-1 flex items-center gap-2">
+                <Compass className="w-5 h-5 text-brand-secondary" />
+                Optional Attractions
+                <span className="text-xs font-normal text-brand-secondary bg-brand-offwhite px-2.5 py-0.5 rounded-full border border-brand-border ml-1">
+                  Low Match: 40–59%
+                </span>
+              </h3>
+              <p className="text-sm text-brand-secondary">
+                These spots have a lower match score but may still interest you if you have spare time or want to explore further.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {optionalPlaces.map((place, idx) => (
+                <div key={idx} className="bg-brand-bg rounded-2xl p-4 border border-brand-border">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h4 className="font-bold text-brand-dark text-sm">{place.name}</h4>
+                      <p className="text-xs text-brand-secondary mt-0.5 capitalize">
+                        {place.city} · {place.type} · {place.time_to_visit_hrs} hrs
+                      </p>
+                    </div>
+                    <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200 shrink-0 ml-2">
+                      {place.match_score}% Match
+                    </span>
+                  </div>
+
+                  {place.match_breakdown?.matched_reasons?.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {place.match_breakdown.matched_reasons.slice(0, 3).map((r, i) => (
+                        <span
+                          key={i}
+                          className="text-xs text-green-700 bg-green-50 px-1.5 py-0.5 rounded border border-green-200"
+                        >
+                          ✓ {r}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {place.match_breakdown?.mismatched_reasons?.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {place.match_breakdown.mismatched_reasons.slice(0, 3).map((r, i) => (
+                        <span
+                          key={i}
+                          className="text-xs text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200"
+                        >
+                          ⚠ {r}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {place.activities?.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {place.activities.slice(0, 3).map((act, i) => (
+                        <span
+                          key={i}
+                          className="text-xs text-brand-deep bg-brand-offwhite px-1.5 py-0.5 rounded capitalize border border-brand-border/50"
+                        >
+                          {act}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {place.entrance_fee_inr > 0 && (
+                    <p className="text-xs text-brand-secondary mt-2">
+                      Entry: <span className="font-semibold text-brand-dark">₹{place.entrance_fee_inr}</span>
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          );
+        })()}
+
       </div>
     </div>
   );

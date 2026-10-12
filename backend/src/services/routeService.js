@@ -331,6 +331,9 @@ function buildRoute(
         match_score:
           place.matchScore,
 
+        match_breakdown:
+          place.match_breakdown || null,
+
         activities:
           place.activities || [],
 

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { 
-  Compass, Map, MapPin, Navigation, Calendar, Users, Wallet, Check, 
-  ArrowRight, Sparkles, Plane, Palmtree
+  Compass, Map, MapPin, Navigation, Calendar, Users, Wallet, Check, X,
+  ArrowRight, Sparkles, Plane, Palmtree, Trash2
 } from 'lucide-react';
 
 import './App.css';
@@ -20,6 +20,21 @@ const INDIAN_STATES = [
   "Delhi", "Jammu and Kashmir"
 ];
 
+const INTEREST_LIST = [
+  { key: 'adventure_sports', label: 'Adventure' },
+  { key: 'water_activities', label: 'Water Sports' },
+  { key: 'trekking', label: 'Trekking' },
+  { key: 'nightlife', label: 'Nightlife' },
+  { key: 'shopping', label: 'Shopping' },
+  { key: 'photography', label: 'Photography' },
+  { key: 'religious', label: 'Religious' },
+  { key: 'solo_female', label: 'Solo Female' },
+  { key: 'wheelchair', label: 'Wheelchair' },
+  { key: 'medical', label: 'Medical Near' },
+  { key: 'dslr', label: 'DSLR User' },
+  { key: 'internet', label: 'Good Internet' }
+];
+
 const DEFAULTS = {
   destination_state: "",
   origin_city: "",
@@ -29,19 +44,7 @@ const DEFAULTS = {
   budget_level: "mid",
   vibe: "chill",
   crowd_preference: "medium",
-  prefers_offbeat: "No preference",
-  solo_female: false,
-  wheelchair_needed: false,
-  medical_important: false,
-  wants_adventure_sports: false,
-  wants_water_activities: false,
-  wants_trekking: false,
-  wants_nightlife: false,
-  wants_shopping: false,
-  wants_photography: false,
-  religious_interest: true,
-  carrying_dslr: false,
-  internet_important: false
+  prefers_offbeat: "No preference"
 };
 
 const API_URL = "http://localhost:5000/api/generate-plan";
@@ -80,7 +83,6 @@ function Navbar({ onPlanClick, onHomeClick, onViewChange }) {
 function LandingPage({ onPlanClick }) {
   return (
     <div className="pt-20 min-h-screen bg-brand-bg text-brand-dark animate-fade-in">
-      {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-brand-border text-xs font-semibold text-brand-sec mb-8">
           <Sparkles className="w-4 h-4 text-brand-lime" />
@@ -102,93 +104,15 @@ function LandingPage({ onPlanClick }) {
           </button>
         </div>
       </div>
-
-      {/* Feature Section */}
-      <div className="max-w-6xl mx-auto px-6 py-24 border-t border-brand-border/50">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4">Everything you need for a better journey</h2>
-          <p className="text-brand-secondary max-w-2xl mx-auto">Our smart platform takes the stress out of travel planning by combining intelligent recommendations with beautiful organization.</p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Main Feature */}
-          <div className="md:col-span-3 bg-white rounded-3xl p-8 md:p-12 border border-brand-border shadow-sm flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1">
-              <div className="w-12 h-12 bg-brand-offwhite rounded-2xl flex items-center justify-center mb-6">
-                <Map className="w-6 h-6 text-brand-deep" />
-              </div>
-              <h3 className="text-2xl font-bold text-brand-dark mb-4">Personalized itineraries</h3>
-              <p className="text-brand-secondary text-lg leading-relaxed mb-6">
-                Tell us where you want to go and what you love. We'll generate a complete, day-by-day travel plan matching your exact preferences.
-              </p>
-              <button 
-                onClick={onPlanClick}
-                className="text-brand-sec font-semibold flex items-center gap-2 hover:text-brand-deep"
-              >
-                Try it out <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="flex-1 w-full bg-brand-bg rounded-2xl border border-brand-border p-6 flex flex-col gap-4 relative overflow-hidden">
-              <div className="bg-white rounded-xl p-4 shadow-sm border border-brand-border/50 opacity-90">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="h-4 w-24 bg-brand-offwhite rounded"></div>
-                  <div className="h-4 w-12 bg-brand-lime/50 rounded"></div>
-                </div>
-                <div className="h-3 w-48 bg-brand-bg rounded"></div>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm border border-brand-border/50 ml-6 z-10">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="h-4 w-32 bg-brand-sec rounded"></div>
-                  <div className="h-4 w-16 bg-brand-lime rounded"></div>
-                </div>
-                <div className="h-3 w-56 bg-brand-bg rounded mb-2"></div>
-                <div className="h-3 w-40 bg-brand-bg rounded"></div>
-              </div>
-              <div className="bg-white rounded-xl p-4 shadow-sm border border-brand-border/50 opacity-90">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="h-4 w-28 bg-brand-offwhite rounded"></div>
-                  <div className="h-4 w-12 bg-brand-lime/50 rounded"></div>
-                </div>
-                <div className="h-3 w-48 bg-brand-bg rounded"></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-3xl p-8 border border-brand-border shadow-sm">
-            <div className="w-10 h-10 bg-brand-offwhite rounded-xl flex items-center justify-center mb-6">
-              <Wallet className="w-5 h-5 text-brand-deep" />
-            </div>
-            <h4 className="text-xl font-bold text-brand-dark mb-3">Budget Planning</h4>
-            <p className="text-brand-secondary">Get accurate cost estimates for stay, food, and transport based on your budget level.</p>
-          </div>
-
-          <div className="bg-white rounded-3xl p-8 border border-brand-border shadow-sm">
-            <div className="w-10 h-10 bg-brand-offwhite rounded-xl flex items-center justify-center mb-6">
-              <Compass className="w-5 h-5 text-brand-deep" />
-            </div>
-            <h4 className="text-xl font-bold text-brand-dark mb-3">Smart Recommendations</h4>
-            <p className="text-brand-secondary">Discover perfect spots matching your vibe, from popular attractions to offbeat gems.</p>
-          </div>
-
-          <div className="bg-white rounded-3xl p-8 border border-brand-border shadow-sm">
-            <div className="w-10 h-10 bg-brand-offwhite rounded-xl flex items-center justify-center mb-6">
-              <Navigation className="w-5 h-5 text-brand-deep" />
-            </div>
-            <h4 className="text-xl font-bold text-brand-dark mb-3">Complete Overview</h4>
-            <p className="text-brand-secondary">View daily timelines, travel distances, and entry fees in one clean interface.</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
-
 
 function App() {
   const [view, setView] = useState(() => {
     const hash = window.location.hash.replace('#', '');
     return ['landing', 'form', 'my-trips', 'about'].includes(hash) ? hash : 'landing';
-  }); // 'landing', 'form', 'loading', 'result', 'my-trips', 'about'
+  });
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -208,6 +132,7 @@ function App() {
   }, [view]);
 
   const [formData, setFormData] = useState(DEFAULTS);
+  const [interestStates, setInterestStates] = useState({});
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
   const [savedTrips, setSavedTrips] = useState(() => {
@@ -230,6 +155,12 @@ function App() {
     localStorage.setItem('travel_smart_trips', JSON.stringify(updatedTrips));
   };
 
+  const deleteTrip = (tripId) => {
+    const updatedTrips = savedTrips.filter(t => t.id !== tripId);
+    setSavedTrips(updatedTrips);
+    localStorage.setItem('travel_smart_trips', JSON.stringify(updatedTrips));
+  };
+
   const startPlanning = () => {
     setView('form');
     window.scrollTo(0, 0);
@@ -239,6 +170,7 @@ function App() {
     setResult(null);
     setError(null);
     setFormData({ ...DEFAULTS, group_composition: [] });
+    setInterestStates({});
     setView('landing');
     window.scrollTo(0, 0);
   };
@@ -257,6 +189,18 @@ function App() {
 
   const setFormValue = (key, value) => {
     setFormData(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleInterestToggle = (key) => {
+    setInterestStates(prev => {
+      const current = prev[key] || 'neutral';
+      let next = 'neutral';
+      if (current === 'neutral') next = 'must';
+      else if (current === 'must') next = 'avoid';
+      else if (current === 'avoid') next = 'neutral';
+      
+      return { ...prev, [key]: next };
+    });
   };
 
   const toggleMultiOption = (opt) => {
@@ -282,14 +226,52 @@ function App() {
     setError(null);
     window.scrollTo(0, 0);
 
+    const mustTags = [];
+    const avoidTags = [];
+
+    INTEREST_LIST.forEach(item => {
+      const state = interestStates[item.key];
+      if (state === 'must') mustTags.push(item.label);
+      if (state === 'avoid') avoidTags.push(item.label);
+    });
+
     try {
       const payload = {
         ...formData,
-        days: Number(formData.days)
+        days: Number(formData.days),
+        
+        wants_adventure_sports: interestStates['adventure_sports'] === 'must',
+        wants_water_activities: interestStates['water_activities'] === 'must',
+        wants_trekking: interestStates['trekking'] === 'must',
+        wants_nightlife: interestStates['nightlife'] === 'must',
+        wants_shopping: interestStates['shopping'] === 'must',
+        wants_photography: interestStates['photography'] === 'must',
+        religious_interest: interestStates['religious'] === 'must',
+        solo_female: interestStates['solo_female'] === 'must',
+        wheelchair_needed: interestStates['wheelchair'] === 'must',
+        medical_important: interestStates['medical'] === 'must',
+        carrying_dslr: interestStates['dslr'] === 'must',
+        internet_important: interestStates['internet'] === 'must',
+
+        avoid_adventure_sports: interestStates['adventure_sports'] === 'avoid',
+        avoid_water_activities: interestStates['water_activities'] === 'avoid',
+        avoid_trekking: interestStates['trekking'] === 'avoid',
+        avoid_nightlife: interestStates['nightlife'] === 'avoid',
+        avoid_shopping: interestStates['shopping'] === 'avoid',
+        avoid_photography: interestStates['photography'] === 'avoid',
+        avoid_religious: interestStates['religious'] === 'avoid'
       };
 
       const response = await axios.post(API_URL, payload);
-      setResult(response.data);
+
+      const enrichedResult = {
+        ...response.data,
+        must_tags: mustTags,
+        avoid_tags: avoidTags,
+        user_inputs: formData
+      };
+
+      setResult(enrichedResult);
       setView('result');
     } catch (err) {
       console.error("Itinerary generation failed:", err);
@@ -298,7 +280,6 @@ function App() {
       setView('form');
     }
   };
-
 
   return (
     <div className="min-h-screen bg-brand-bg font-sans selection:bg-brand-lime selection:text-brand-dark">
@@ -309,7 +290,15 @@ function App() {
 
       {view === 'my-trips' && (
         <div className="pt-32 pb-24 px-4 sm:px-6 max-w-5xl mx-auto animate-fade-in">
-          <h2 className="text-3xl font-bold text-brand-dark mb-8">My Trips</h2>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold text-brand-dark">My Trips</h2>
+            {savedTrips.length > 0 && (
+              <span className="text-sm font-medium text-brand-secondary bg-white px-4 py-1.5 rounded-full border border-brand-border">
+                {savedTrips.length} Saved {savedTrips.length === 1 ? 'Trip' : 'Trips'}
+              </span>
+            )}
+          </div>
+
           {savedTrips.length === 0 ? (
             <div className="bg-white rounded-3xl p-12 border border-brand-border text-center shadow-sm">
               <Compass className="w-12 h-12 text-brand-sec mx-auto mb-4 opacity-50" />
@@ -324,32 +313,50 @@ function App() {
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {savedTrips.map(trip => (
-                <div key={trip.id} className="bg-white rounded-2xl p-6 border border-brand-border shadow-sm flex flex-col">
-                  <h3 className="text-xl font-bold text-brand-dark mb-2">{trip.data.destination}</h3>
-                  <div className="text-sm text-brand-secondary mb-4 space-y-1">
-                    <p><Calendar className="w-4 h-4 inline mr-1 text-brand-sec" /> {trip.data.total_days} Days</p>
-                    <p><Users className="w-4 h-4 inline mr-1 text-brand-sec" /> {trip.data.group_type}</p>
+              {savedTrips.map(trip => {
+                const tripInfo = trip.data || {};
+                const destName = tripInfo.destination || tripInfo.destination_state || "Saved Trip";
+                const days = tripInfo.total_days || tripInfo.days || 3;
+                const group = tripInfo.group_type || "Friends";
+
+                return (
+                  <div key={trip.id} className="bg-white rounded-2xl p-6 border border-brand-border shadow-sm flex flex-col relative group hover:shadow-md transition-all">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-xl font-bold text-brand-dark">{destName}</h3>
+                      <button 
+                        onClick={() => deleteTrip(trip.id)}
+                        className="text-gray-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors"
+                        title="Delete Trip"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <div className="text-sm text-brand-secondary mb-4 space-y-1">
+                      <p><Calendar className="w-4 h-4 inline mr-1 text-brand-sec" /> {days} Days</p>
+                      <p className="capitalize"><Users className="w-4 h-4 inline mr-1 text-brand-sec" /> {group}</p>
+                    </div>
+
+                    <div className="mt-auto pt-4 border-t border-brand-border flex flex-col gap-2">
+                      <button 
+                        onClick={() => {
+                          setResult(tripInfo);
+                          setView('result');
+                        }}
+                        className="w-full bg-brand-offwhite hover:bg-brand-sec/10 text-brand-dark px-4 py-2 rounded-xl text-sm font-semibold transition-colors border border-brand-border/50 mb-1"
+                      >
+                        View Itinerary
+                      </button>
+                      <button 
+                        onClick={() => generateItineraryPDF(tripInfo)}
+                        className="w-full bg-brand-dark hover:bg-brand-deep text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
+                      >
+                        Download PDF
+                      </button>
+                    </div>
                   </div>
-                  <div className="mt-auto pt-4 border-t border-brand-border flex flex-col gap-2">
-                    <button 
-                      onClick={() => {
-                        setResult(trip.data);
-                        setView('result');
-                      }}
-                      className="w-full bg-brand-offwhite hover:bg-brand-sec/10 text-brand-dark px-4 py-2 rounded-xl text-sm font-semibold transition-colors border border-brand-border/50 mb-2"
-                    >
-                      View Itinerary
-                    </button>
-                    <button 
-                      onClick={() => generateItineraryPDF(trip.data)}
-                      className="w-full bg-brand-dark hover:bg-brand-deep text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
-                    >
-                      Download PDF
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -358,16 +365,10 @@ function App() {
       {view === 'loading' && (
         <div className="pt-32 pb-24 px-6 flex flex-col items-center justify-center min-h-screen animate-fade-in">
           <div className="bg-white rounded-3xl p-12 max-w-md w-full shadow-lg border border-brand-border text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-brand-offwhite">
-              <div className="h-full bg-brand-sec animate-[pulse_2s_ease-in-out_infinite]" style={{ width: '60%' }}></div>
-            </div>
             <div className="w-20 h-20 bg-brand-offwhite rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
               <Plane className="w-10 h-10 text-brand-sec" />
             </div>
             <h2 className="text-2xl font-bold text-brand-dark mb-4">Creating your itinerary...</h2>
-            <p className="text-brand-secondary leading-relaxed">
-              We're finding the best places, optimizing your travel route, and crunching the numbers.
-            </p>
           </div>
         </div>
       )}
@@ -388,7 +389,6 @@ function App() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-12">
-              {/* SECTION 1: TRIP DETAILS */}
               <div>
                 <h3 className="text-xl font-bold text-brand-dark mb-6 flex items-center gap-2 border-b border-brand-border pb-4">
                   <MapPin className="w-5 h-5 text-brand-sec" /> Trip Details
@@ -405,7 +405,7 @@ function App() {
                   <div>
                     <label className="block text-sm font-semibold text-brand-primary mb-2">Destination State *</label>
                     <select 
-                      className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-brand-primary focus:outline-none focus:border-brand-sec focus:ring-1 focus:ring-brand-sec transition-shadow"
+                      className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-brand-primary focus:outline-none focus:border-brand-sec transition-shadow"
                       value={formData.destination_state}
                       onChange={(e) => setFormValue('destination_state', e.target.value)}
                       required
@@ -463,7 +463,6 @@ function App() {
                 </div>
               </div>
 
-              {/* SECTION 2: PREFERENCES */}
               <div>
                 <h3 className="text-xl font-bold text-brand-dark mb-6 flex items-center gap-2 border-b border-brand-border pb-4">
                   <Wallet className="w-5 h-5 text-brand-sec" /> Preferences
@@ -521,44 +520,48 @@ function App() {
                 </div>
               </div>
 
-              {/* SECTION 3: INTERESTS */}
               <div>
-                <h3 className="text-xl font-bold text-brand-dark mb-6 flex items-center gap-2 border-b border-brand-border pb-4">
-                  <Palmtree className="w-5 h-5 text-brand-sec" /> Special Interests
-                </h3>
+                <div className="flex justify-between items-center mb-6 border-b border-brand-border pb-4">
+                  <h3 className="text-xl font-bold text-brand-dark flex items-center gap-2">
+                    <Palmtree className="w-5 h-5 text-brand-sec" /> Special Interests
+                  </h3>
+                  <span className="text-xs text-brand-secondary">
+                    Click: <span className="text-emerald-700 font-bold">Must Have</span> → <span className="text-rose-600 font-bold">Avoid</span> → Neutral
+                  </span>
+                </div>
                 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {[
-                    { key: 'wants_adventure_sports', label: 'Adventure' },
-                    { key: 'wants_water_activities', label: 'Water Sports' },
-                    { key: 'wants_trekking', label: 'Trekking' },
-                    { key: 'wants_nightlife', label: 'Nightlife' },
-                    { key: 'wants_shopping', label: 'Shopping' },
-                    { key: 'wants_photography', label: 'Photography' },
-                    { key: 'religious_interest', label: 'Religious' },
-                    { key: 'solo_female', label: 'Solo Female' },
-                    { key: 'wheelchair_needed', label: 'Wheelchair' },
-                    { key: 'medical_important', label: 'Medical Near' },
-                    { key: 'carrying_dslr', label: 'DSLR User' },
-                    { key: 'internet_important', label: 'Good Internet' }
-                  ].map(interest => (
-                    <label 
-                      key={interest.key}
-                      className={`cursor-pointer flex items-center justify-center text-center p-4 rounded-2xl border transition-all ${
-                        formData[interest.key] 
-                          ? "bg-brand-offwhite border-brand-deep text-brand-deep shadow-sm" 
-                          : "bg-white border-brand-border text-brand-secondary hover:border-brand-sec/40"
-                      }`}
-                    >
-                      <input 
-                        type="checkbox" 
-                        className="hidden"
-                        checked={formData[interest.key]}
-                        onChange={(e) => setFormValue(interest.key, e.target.checked)}
-                      />
-                      <span className="text-sm font-semibold">{interest.label}</span>
-                    </label>
-                  ))}
+                  {INTEREST_LIST.map(item => {
+                    const state = interestStates[item.key] || 'neutral';
+
+                    let btnStyle = "bg-white border-brand-border text-brand-secondary hover:border-brand-sec/40";
+                    if (state === 'must') {
+                      btnStyle = "bg-emerald-50 border-emerald-600 text-emerald-800 shadow-sm font-bold ring-1 ring-emerald-600";
+                    } else if (state === 'avoid') {
+                      btnStyle = "bg-rose-50 border-rose-500 text-rose-700 shadow-sm font-bold ring-1 ring-rose-500";
+                    }
+
+                    return (
+                      <button
+                        type="button"
+                        key={item.key}
+                        onClick={() => handleInterestToggle(item.key)}
+                        className={`p-4 rounded-2xl border transition-all flex flex-col items-center justify-center gap-1.5 ${btnStyle}`}
+                      >
+                        <span className="text-sm">{item.label}</span>
+                        {state === 'must' && (
+                          <span className="text-[10px] uppercase tracking-wider bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <Check className="w-3 h-3" /> Must
+                          </span>
+                        )}
+                        {state === 'avoid' && (
+                          <span className="text-[10px] uppercase tracking-wider bg-rose-200 text-rose-900 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <X className="w-3 h-3" /> Avoid
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
