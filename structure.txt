@@ -1,0 +1,79 @@
+Folder PATH listing for volume OS
+Volume serial number is 868D-776C
+C:.
+|   .gitignore
+|   structure.txt
+|   
++---backend
+|   |   .env.example
+|   |   .gitignore
+|   |   package-lock.json
+|   |   package.json
+|   |   README.md
+|   |   
+|   \---src
+|       |   app.js
+|       |   server.js
+|       |   
+|       +---config
+|       |       db.js
+|       |       
+|       +---controllers
+|       |       itineraryController.js
+|       |       
+|       +---data
+|       |       majorCities.js
+|       |       
+|       +---routes
+|       |       itineraryRoutes.js
+|       |       
+|       \---services
+|               constraintFilterService.js
+|               distanceUtils.js
+|               knapsackService.js
+|               matchingService.js
+|               routeService.js
+|               travelCostService.js
+|               
++---data
+|       Top Indian Places to Visit.csv
+|       
++---database
+|       travel_planner_data.sql
+|       
++---frontend
+|   |   .gitignore
+|   |   .oxlintrc.json
+|   |   index.html
+|   |   package-lock.json
+|   |   package.json
+|   |   postcss.config.js
+|   |   README.md
+|   |   tailwind.config.js
+|   |   vite.config.js
+|   |   
+|   +---public
+|   |       favicon.svg
+|   |       icons.svg
+|   |       
+|   \---src
+|       |   AboutPage.jsx
+|       |   App.css
+|       |   App.jsx
+|       |   CityAutocomplete.jsx
+|       |   index.css
+|       |   ItineraryResult.jsx
+|       |   main.jsx
+|       |   pdfUtils.js
+|       |   
+|       \---assets
+|               hero.png
+|               react.svg
+|               vite.svg
+|               
+\---scripts
+        config.py
+        enrich.py
+        geocode_places.py
+        migrate.py
+        
