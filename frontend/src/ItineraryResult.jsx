@@ -8,7 +8,8 @@ import { generateItineraryPDF } from './pdfUtils';
 function ItineraryResult({ data, onStartOver, onSaveTrip }) {
   const [activeDay, setActiveDay] = useState(0);
   const [saveStatus, setSaveStatus] = useState(null); // 'success' | 'error' | null
-  const day = data.itinerary[activeDay];
+  const safeDayIndex = (data?.itinerary && activeDay < data.itinerary.length) ? activeDay : 0;
+  const day = data?.itinerary?.[safeDayIndex] || { places: [] };
 
   const handleSavePDF = () => {
     const success = generateItineraryPDF(data);

@@ -7,13 +7,24 @@ async function applyConstraints(places, userPreferences) {
     hasSeniors,
     needsWheelchairAccess,
     budgetLevel,
-    isFamily
+    isFamily,
+    carryingDslr,
+    medicalImportant,
+    internetImportant,
+    avoidAdventureSports,
+    avoidWaterActivities,
+    avoidTrekking,
+    avoidNightlife,
+    avoidShopping,
+    avoidPhotography,
+    avoidReligious
   } = userPreferences;
 
   // Fetch all hard rules from database
   const [rules] = await pool.query('SELECT * FROM constraint_rules');
 
   const filtered = places.filter(place => {
+    // 1. Mandatory Database Constraint Rules
     for (const rule of rules) {
       const { condition_field, condition_value, excluded_attribute, excluded_value } = rule;
 
@@ -33,6 +44,46 @@ async function applyConstraints(places, userPreferences) {
         }
       }
     }
+
+    // 2. Hardware / Accessibility Constraints
+    if (carryingDslr && place.dslr_allowed === 'No') {
+      return false;
+    }
+    if (medicalImportant && place.medical_facilities_nearby === 'no') {
+      return false;
+    }
+    if (internetImportant && !['good', 'moderate'].includes(place.internet_connectivity)) {
+      return false;
+    }
+
+    // 3. Mandatory Avoid Preferences
+    if (avoidAdventureSports && place.adventure_sports === 'yes') {
+      return false;
+    }
+    if (avoidWaterActivities && place.water_activities === 'yes') {
+      return false;
+    }
+    if (avoidTrekking && place.trekking === 'yes') {
+      return false;
+    }
+    if (avoidNightlife && place.nightlife === 'yes') {
+      return false;
+    }
+    if (avoidShopping && place.shopping_nearby === 'yes') {
+      return false;
+    }
+    if (avoidPhotography && place.photography_spot === 'yes') {
+      return false;
+    }
+    if (avoidReligious && place.religious_significance === 'yes') {
+      return false;
+    }
+
+    // 4. Hard Budget Limit
+    if (budgetLevel === 'budget' && (place.entrance_fee_inr || 0) > 1500) {
+      return false;
+    }
+
     return true;
   });
 
