@@ -47,7 +47,8 @@ const DEFAULTS = {
   prefers_offbeat: "No preference"
 };
 
-const API_URL = import.meta.env.VITE_API_URL || "/api/generate-plan";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://trip-planner-backend-6fp4.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL || `${API_BASE_URL}/api/generate-plan`;
 
 function Navbar({ onPlanClick, onHomeClick, onViewChange }) {
   return (
