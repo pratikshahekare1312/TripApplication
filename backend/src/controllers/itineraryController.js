@@ -72,7 +72,14 @@ async function generateItinerary(req, res) {
       avoid_shopping,
       avoid_photography,
       avoid_religious
-    } = req.body;
+    } = req.body || {};
+
+    if (!destination_state) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'destination_state is required'
+      });
+    }
 
     const numDays = Math.max(1, Number(days) || 3);
 

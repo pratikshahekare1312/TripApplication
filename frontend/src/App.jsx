@@ -47,7 +47,7 @@ const DEFAULTS = {
   prefers_offbeat: "No preference"
 };
 
-const API_URL = "http://localhost:5000/api/generate-plan";
+const API_URL = import.meta.env.VITE_API_URL || "/api/generate-plan";
 
 function Navbar({ onPlanClick, onHomeClick, onViewChange }) {
   return (
